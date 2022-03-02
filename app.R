@@ -9,11 +9,14 @@ ui <- fluidPage(
 
   titlePanel(title=div("ThermalPlate App",img(src="headimage.png"))), 
   sidebarPanel(
+    
+    # Upload file input
     fileInput("file", "Upload data*", accept = c(".xlsx")),
     p("Upload .xlsx file. Other formats to be included in due course", style = "font-family: 'times'; font-si16pt"),
     br(),
     p("Enter corner temperatures. Usually this is an average of the temperatures recorded via temperature logger", style = "font-family: 'times'; font-si16pt"),
     p("Day corner temperatures", style = "font-family: 'times'; font-si16pt"),
+    # Upload temperature inputs
     splitLayout(numericInput("dTL","TopLeft",40,min=0,max=45),
                 numericInput("dTR","TopRight",40,min=0,max=45)),
     splitLayout(numericInput("dBL","BottomLeft",0,min=0,max=45),
@@ -38,6 +41,7 @@ ui <- fluidPage(
 # SERVER STARTS HERE
 server <- function(input, output) {
 
+# OUTPUTS  
   # Outputs user template 
   output$table<-renderTable({
     file_to_read<-input$file
@@ -46,8 +50,28 @@ server <- function(input, output) {
     }
     read_xlsx(file_to_read$datapath)%>%head()
   })
+  
+  # Outputs thermal plate grid in use (i.e. 8x8 or 13x13)
+  output$selected_var <- renderText({
+    file_to_plot<-input$file
+    if(is.null(file_to_plot)){
+      return()
+    }
+    paste0("Your Petri dish grid is ",nrow(bb())," by ",ncol(bb()))
+  })
 
-# Creates bb(), a data frame wth your template 
+  # Outputs germination % vs day night temperature
+  output$plot<-renderPlot({
+    if(is.null(bb())){
+      return()
+    }
+    ggplot(bb(),aes(x=a,y=b))+
+      geom_point()
+  })
+
+# REACTIVE  
+  
+# Creates bb(), a data frame to be feed into ggplot and analysis 
   
   bb<-reactive({
     file_to_plot<-input$file
@@ -57,21 +81,9 @@ server <- function(input, output) {
     bb<-read_xlsx(file_to_plot$datapath)
   })
   
-  output$selected_var <- renderText({
-    file_to_plot<-input$file
-    if(is.null(file_to_plot)){
-      return()
-    }
-    paste0("Your Petri dish grid is ",nrow(bb())," by ",ncol(bb()))
-  })
   
-  output$plot<-renderPlot({
-    if(is.null(bb())){
-      return()
-    }
-    ggplot(bb(),aes(x=a,y=b))+
-      geom_point()
-  })
+  
+
 
 }
 
