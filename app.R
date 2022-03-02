@@ -34,12 +34,8 @@ ui <- fluidPage(
   ),
   
   mainPanel(
-    p("Thermal plate Petri dish labels scheme.", style = "font-family: 'times'; font-si16pt"),
-    img(src="thermal.png"),
-    br(),
-    br(),
-    p(HTML(paste0("Upload information following this template. Respect column names. Leave cell in blank if T",tags$sub("50")," is not known")), style = "font-family: 'times'; font-si16pt"),
-    img(src="thermal2.png"),
+    div(img(src="thermal.png"),img(src="thermal2.png")),
+    p(HTML(paste0("Left. Thermal plate Petri dish expected labelling. Right. Spreadsheet template. Keep same headings and leave blank unknown or not calculable T",tags$sub("50")," values")), style = "font-family: 'times'; font-si16pt"),
     tableOutput("table"),
     plotOutput("plot"),
     textOutput("selected_var")
@@ -65,7 +61,11 @@ server <- function(input, output) {
     bb<-read_xlsx(file_to_plot$datapath)
   })
   
-  output$selected_var <- renderText({ 
+  output$selected_var <- renderText({
+    file_to_plot<-input$file
+    if(is.null(file_to_plot)){
+      return()
+    }
     paste0("Your Petri dish grid is ",nrow(bb())," by ",ncol(bb()))
   })
   
