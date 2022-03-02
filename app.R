@@ -14,7 +14,7 @@ library(tidyverse)
 # Define UI for application that draws a histogram
 ui <- fluidPage(
 
-  titlePanel("Thermal plate app"),
+  titlePanel(title=div("ThermalPlate App",img(src="headimage.png"))),
   sidebarPanel(
     fileInput("file", "Upload data*", accept = c(".xlsx")),
     p("Upload .xlsx file. Other formats to be included in due course", style = "font-family: 'times'; font-si16pt"),
@@ -41,7 +41,8 @@ ui <- fluidPage(
     p(HTML(paste0("Upload information following this template. Respect column names. Leave cell in blank if T",tags$sub("50")," is not known")), style = "font-family: 'times'; font-si16pt"),
     img(src="thermal2.png"),
     tableOutput("table"),
-    plotOutput("plot")
+    plotOutput("plot"),
+    textOutput("selected_var")
   )
 )
 
@@ -62,6 +63,10 @@ server <- function(input, output) {
       return()
     }
     bb<-read_xlsx(file_to_plot$datapath)
+  })
+  
+  output$selected_var <- renderText({ 
+    paste0("Your Petri dish grid is ",nrow(bb())," by ",ncol(bb()))
   })
   
   output$plot<-renderPlot({
