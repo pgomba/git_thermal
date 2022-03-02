@@ -32,6 +32,7 @@ ui <- fluidPage(
   mainPanel(
     div(img(src="thermal.png"),img(src="thermal2.png")),
     p(HTML(paste0("Left. Thermal plate Petri dish expected labelling. Right. Spreadsheet template. Keep same headings and leave blank unknown or not calculable T",tags$sub("50")," values")), style = "font-family: 'times'; font-si16pt"),
+    helpText(a("Click to download example/template.Remember to link to template when repository is public ",href="https://github.com/pgomba")),
     #tableOutput("table"),
     #tableOutput("mergetable"),
     plotOutput("plot2",width="475px",height = "430px"),
