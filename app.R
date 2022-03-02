@@ -1,20 +1,13 @@
-#
-# This is a Shiny web application. You can run the application by clicking
-# the 'Run App' button above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
+
 library(shiny)
 library(readxl)
 library(tidyverse)
 
+# UI
 
-# Define UI for application that draws a histogram
 ui <- fluidPage(
 
-  titlePanel(title=div("ThermalPlate App",img(src="headimage.png"))),
+  titlePanel(title=div("ThermalPlate App",img(src="headimage.png"))), 
   sidebarPanel(
     fileInput("file", "Upload data*", accept = c(".xlsx")),
     p("Upload .xlsx file. Other formats to be included in due course", style = "font-family: 'times'; font-si16pt"),
@@ -42,9 +35,10 @@ ui <- fluidPage(
   )
 )
 
-# Define server logic required to draw a histogram
+# SERVER STARTS HERE
 server <- function(input, output) {
-  
+
+  # Outputs user template 
   output$table<-renderTable({
     file_to_read<-input$file
     if(is.null(file_to_read)){
@@ -52,6 +46,8 @@ server <- function(input, output) {
     }
     read_xlsx(file_to_read$datapath)%>%head()
   })
+
+# Creates bb(), a data frame wth your template 
   
   bb<-reactive({
     file_to_plot<-input$file
