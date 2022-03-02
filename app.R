@@ -17,7 +17,20 @@ ui <- fluidPage(
   titlePanel("Thermal plate app"),
   sidebarPanel(
     fileInput("file", "Upload data*", accept = c(".xlsx")),
-    p("Upload .xlsx file. Other formats to be included in due course", style = "font-family: 'times'; font-si16pt")
+    p("Upload .xlsx file. Other formats to be included in due course", style = "font-family: 'times'; font-si16pt"),
+    br(),
+    p("Enter corner temperatures. Usually this is an average of the temperatures recorded via temperature logger", style = "font-family: 'times'; font-si16pt"),
+    p("Day corner temperatures", style = "font-family: 'times'; font-si16pt"),
+    splitLayout(numericInput("dTL","TopLeft",40,min=0,max=45),
+                numericInput("dTR","TopRight",40,min=0,max=45)),
+    splitLayout(numericInput("dBL","BottomLeft",0,min=0,max=45),
+                numericInput("dBR","BottomRight",0,min=0,max=45)),
+    p("Night corner temperatures", style = "font-family: 'times'; font-si16pt"),
+    splitLayout(numericInput("nTL","TopLeft",40,min=0,max=45),
+                numericInput("nTR","TopRight",40,min=0,max=45)),
+    splitLayout(numericInput("nBL","BottomLeft",0,min=0,max=45),
+                numericInput("nBR","BottomRight",0,min=0,max=45))
+    
   ),
   
   mainPanel(
