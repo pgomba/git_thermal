@@ -35,6 +35,7 @@ ui <- fluidPage(
     #tableOutput("table"),
     #tableOutput("mergetable"),
     plotOutput("plot2",width="475px",height = "430px"),
+    plotOutput("plot3",width="475px",height = "430px"),
     textOutput("selected_var")
   )
 )
@@ -131,6 +132,25 @@ server <- function(input, output) {
       geom_text(size=6)+
       scale_fill_distiller(palette = "Spectral", direction = -1)+
       labs(title="Final Germination (%)",x="Day Temperature",y="Night Temperature")+
+      theme(plot.title =element_text(size=16),
+            legend.title = element_blank(),
+            axis.text.x = element_text(size=20),
+            axis.text.y= element_text(size=20))+
+      theme(legend.position = "right")
+  })
+  
+  output$plot3<-renderPlot({
+    file_to_plot<-input$file
+    if(is.null(file_to_plot)){
+      return()
+    }
+    ggplot(cc(),aes(day_temp_ext,night_temp_ext,z=1/t50,label=round(germ,digits = 0)))+
+      geom_segment(x=0,xend=40,y=0,yend=40,size=2,linetype="dashed")+
+      geom_point(aes(fill=1/t50),size=12,shape=21,stroke=1.1)+
+      theme_dark()+
+      geom_text(size=6)+
+      scale_fill_distiller(palette = "YlGn", direction = -1)+
+      labs(title="Germination rate(1/T50)",x="Day Temperature",y="Night Temperature")+
       theme(plot.title =element_text(size=16),
             legend.title = element_blank(),
             axis.text.x = element_text(size=20),
