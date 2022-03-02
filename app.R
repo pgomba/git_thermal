@@ -65,6 +65,9 @@ server <- function(input, output) {
   })
   
   output$plot<-renderPlot({
+    if(is.null(bb())){
+      return()
+    }
     ggplot(bb(),aes(x=a,y=b))+
       geom_point()
   })
