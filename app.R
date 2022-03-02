@@ -32,9 +32,9 @@ ui <- fluidPage(
   mainPanel(
     div(img(src="thermal.png"),img(src="thermal2.png")),
     p(HTML(paste0("Left. Thermal plate Petri dish expected labelling. Right. Spreadsheet template. Keep same headings and leave blank unknown or not calculable T",tags$sub("50")," values")), style = "font-family: 'times'; font-si16pt"),
-    tableOutput("table"),
-    tableOutput("temperatures"),
-    plotOutput("plot"),
+    #tableOutput("table"),
+    #tableOutput("mergetable"),
+    plotOutput("plot2",width="475px",height = "430px"),
     textOutput("selected_var")
   )
 )
@@ -90,8 +90,54 @@ server <- function(input, output) {
     }
     day_temp<-seq((input$dTL+input$dTR)/2,(input$dBL+input$dBR)/2,length.out=sqrt(nrow(bb())))
     night_temp<-seq((input$nTL+input$nBL)/2,(input$nTR+input$nBR)/2,length.out=sqrt(nrow(bb())))
-    data.frame(day_temp,night_temp)
+    day_temp_ext<-rep(day_temp,each=13)
+    night_temp_ext<-rep(day_temp,times=13)
+    data.frame(day_temp_ext,night_temp_ext)
     })
+
+  output$mergetable<-renderTable({
+    file_to_plot<-input$file
+    if(is.null(file_to_plot)){
+      return()
+    }
+    day_temp<-seq((input$dTL+input$dTR)/2,(input$dBL+input$dBR)/2,length.out=sqrt(nrow(bb())))
+    night_temp<-seq((input$nTL+input$nBL)/2,(input$nTR+input$nBR)/2,length.out=sqrt(nrow(bb())))
+    day_temp_ext<-rep(day_temp,each=13)
+    night_temp_ext<-rep(day_temp,times=13)
+    data.frame(day_temp_ext,night_temp_ext)%>%cbind(bb())
+  })
+  
+  cc<-reactive({
+    file_to_plot<-input$file
+    if(is.null(file_to_plot)){
+      return()
+    }
+    day_temp<-seq((input$dTL+input$dTR)/2,(input$dBL+input$dBR)/2,length.out=sqrt(nrow(bb())))
+    night_temp<-seq((input$nTL+input$nBL)/2,(input$nTR+input$nBR)/2,length.out=sqrt(nrow(bb())))
+    day_temp_ext<-rep(day_temp,each=13)
+    night_temp_ext<-rep(night_temp,times=13)
+    data.frame(day_temp_ext,night_temp_ext)%>%cbind(bb())
+  })
+  
+  output$plot2<-renderPlot({
+    file_to_plot<-input$file
+    if(is.null(file_to_plot)){
+      return()
+    }
+    ggplot(cc(),aes(day_temp_ext,night_temp_ext,z=germ,label=round(germ,digits = 0)))+
+      geom_segment(x=0,xend=40,y=0,yend=40,size=2,linetype="dashed")+
+      geom_point(aes(fill=germ),size=12,shape=21,stroke=1.1)+
+      theme_dark()+
+      geom_text(size=6)+
+      scale_fill_distiller(palette = "Spectral", direction = -1)+
+      labs(title="Final Germination (%)",x="Day Temperature",y="Night Temperature")+
+      theme(plot.title =element_text(size=16),
+            legend.title = element_blank(),
+            axis.text.x = element_text(size=20),
+            axis.text.y= element_text(size=20))+
+      theme(legend.position = "right")
+  })
+
 
 }
 
