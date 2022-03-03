@@ -32,11 +32,11 @@ ui <- fluidPage(
   mainPanel(
     div(img(src="thermal.png"),img(src="thermal2.png")),
     p(HTML(paste0("Left. Thermal plate Petri dish expected labelling. Right. Spreadsheet template. Keep same headings and leave blank unknown or not calculable T",tags$sub("50")," values")), style = "font-family: 'times'; font-si16pt"),
-    helpText(a("Click to download example/template.Remember to link to template when repository is public ",href="https://github.com/pgomba")),
+    helpText(a("Click to download example/template.",href="https://github.com/pgomba/temp/raw/main/set.xlsx")),
     #tableOutput("table"),
     #tableOutput("mergetable"),
-    plotOutput("plot2",width="475px",height = "430px"),
-    plotOutput("plot3",width="475px",height = "430px"),
+    plotOutput("plot2",width="600px",height = "590px"),
+    plotOutput("plot3",width="600px",height = "590px"),
     textOutput("selected_var")
   )
 )
@@ -126,9 +126,9 @@ server <- function(input, output) {
     if(is.null(file_to_plot)){
       return()
     }
-    ggplot(cc(),aes(day_temp_ext,night_temp_ext,z=germ,label=round(germ,digits = 0)))+
+    ggplot(cc(),aes(day_temp_ext,night_temp_ext,z=(germ/viab)*100,label=round((germ/viab)*100,digits = 0)))+
       geom_segment(x=0,xend=40,y=0,yend=40,size=2,linetype="dashed")+
-      geom_point(aes(fill=germ),size=12,shape=21,stroke=1.1)+
+      geom_point(aes(fill=germ),size=16,shape=21,stroke=1.1)+
       theme_dark()+
       geom_text(size=6)+
       scale_fill_distiller(palette = "Spectral", direction = -1)+
@@ -145,11 +145,11 @@ server <- function(input, output) {
     if(is.null(file_to_plot)){
       return()
     }
-    ggplot(cc(),aes(day_temp_ext,night_temp_ext,z=1/t50,label=round(1/t50,1)))+
+    ggplot(cc(),aes(day_temp_ext,night_temp_ext,z=1/t50,label=round(1/t50,2)))+
       geom_segment(x=0,xend=40,y=0,yend=40,size=2,linetype="dashed")+
-      geom_point(aes(fill=1/t50),size=12,shape=21,stroke=1.1)+
+      geom_point(aes(fill=1/t50),size=16,shape=21,stroke=1.1)+
       theme_dark()+
-      geom_text(size=4)+
+      geom_text(size=5)+
       scale_fill_distiller(palette = "YlGn", direction = -1)+
       labs(title="Germination rate(1/T50)",x="Day Temperature",y="Night Temperature")+
       theme(plot.title =element_text(size=16),
