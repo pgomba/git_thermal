@@ -145,11 +145,11 @@ server <- function(input, output) {
     if(is.null(file_to_plot)){
       return()
     }
-    ggplot(cc(),aes(day_temp_ext,night_temp_ext,z=1/t50,label=round(germ,digits = 0)))+
+    ggplot(cc(),aes(day_temp_ext,night_temp_ext,z=1/t50,label=round(1/t50,1)))+
       geom_segment(x=0,xend=40,y=0,yend=40,size=2,linetype="dashed")+
       geom_point(aes(fill=1/t50),size=12,shape=21,stroke=1.1)+
       theme_dark()+
-      geom_text(size=6)+
+      geom_text(size=4)+
       scale_fill_distiller(palette = "YlGn", direction = -1)+
       labs(title="Germination rate(1/T50)",x="Day Temperature",y="Night Temperature")+
       theme(plot.title =element_text(size=16),
