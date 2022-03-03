@@ -7,7 +7,7 @@ library(tidyverse)
 
 ui <- fluidPage(
 
-  titlePanel(title=div("ThermalPlate App",img(src="headimage.png"))), 
+  titlePanel(img(src="headimage3.png")), 
   sidebarPanel(
     
     # Upload file input
