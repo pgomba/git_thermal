@@ -32,7 +32,7 @@ ui <- fluidPage(
   mainPanel(
     div(img(src="thermal.png"),img(src="thermal2.png")),
     p(HTML(paste0("Left. Thermal plate Petri dish expected labelling. Right. Spreadsheet template. Keep same headings and leave blank unknown or not calculable T",tags$sub("50")," values")), style = "font-family: 'times'; font-si16pt"),
-    p(HTML(paste0("Use ",tags$code("germ"), "to input the number of germinated seeds and" ,tags$code("viab"), "for the total of viable seeds on your Petri dish (germinated+mouldy, but no empties)")), style = "font-family: 'times'; font-si16pt"),
+    p(HTML(paste0("Use ",tags$code("germ"), "column to input the number of germinated seeds and" ,tags$code("viab"), " column for the total of viable seeds on your Petri dish (germinated+mouldy, but no empties)")), style = "font-family: 'times'; font-si16pt"),
     helpText(a("Click to download example/template.",href="https://github.com/pgomba/temp/raw/main/set.xlsx")),
     #tableOutput("table"),
     #tableOutput("mergetable"),
@@ -137,7 +137,8 @@ server <- function(input, output) {
       theme(plot.title =element_text(size=16),
             legend.title = element_blank(),
             axis.text.x = element_text(size=20),
-            axis.text.y= element_text(size=20))+
+            axis.text.y= element_text(size=20),
+            axis.title = element_text(size=20))+
       theme(legend.position = "right")
   })
   
@@ -152,11 +153,13 @@ server <- function(input, output) {
       theme_dark()+
       geom_text(size=5)+
       scale_fill_distiller(palette = "YlGn", direction = -1)+
-      labs(title="Germination rate(1/T50)",x="Day Temperature",y="Night Temperature")+
+      labs(title=expression(Germination~Rate~(1/T[50])),x="Day Temperature",y="Night Temperature")+
       theme(plot.title =element_text(size=16),
             legend.title = element_blank(),
             axis.text.x = element_text(size=20),
-            axis.text.y= element_text(size=20))+
+            axis.text.y= element_text(size=20),
+            axis.title = element_text(size=20)
+            )+
       theme(legend.position = "right")
   })
 
