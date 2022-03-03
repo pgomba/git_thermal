@@ -32,6 +32,7 @@ ui <- fluidPage(
   mainPanel(
     div(img(src="thermal.png"),img(src="thermal2.png")),
     p(HTML(paste0("Left. Thermal plate Petri dish expected labelling. Right. Spreadsheet template. Keep same headings and leave blank unknown or not calculable T",tags$sub("50")," values")), style = "font-family: 'times'; font-si16pt"),
+    p(HTML(paste0("Use ",tags$code("germ"), "to input the number of germinated seeds and" ,tags$code("viab"), "for the total of viable seeds on your Petri dish (germinated+mouldy, but no empties)")), style = "font-family: 'times'; font-si16pt"),
     helpText(a("Click to download example/template.",href="https://github.com/pgomba/temp/raw/main/set.xlsx")),
     #tableOutput("table"),
     #tableOutput("mergetable"),
